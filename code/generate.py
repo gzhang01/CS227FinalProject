@@ -49,7 +49,7 @@ def diagnose():
 		print data[i], cat[i]
 
 if __name__ == "__main__":
-	if len(sys.argv) == 1:
+	if len(sys.argv) == 2:
 		diagnose()
 
 	# Generate data
@@ -73,3 +73,4 @@ if __name__ == "__main__":
 	# Generate usage message
 	else:
 		print "Usage: python generate.py [n] [d] [w] [outfile]"
+		print "Usage: python generate.py diagnose"
