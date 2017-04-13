@@ -6,7 +6,7 @@ import sys
 # Parameters:
 # 	n - number of datapoints desired
 #	d - dimension of datapoints
-#	w - weight vector
+#	w - weight vector [dim1, dim2, ...]
 # 		* NOTE: |w| must equal d + 1 since |w| should allow
 #				for a scalar term 
 # Returns: (data, category)
