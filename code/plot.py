@@ -17,14 +17,15 @@ from privateLogReg import privateLogReg
 
 
 # Generate data
+n = 50
 w_real = [1, -1, 0]
-data, labels = generate(50, 2, w_real)
+data, labels = generate(n, 2, w_real)
 # for i in xrange(data.shape[0]):
 # 	print data[i, :], labels[i, :]
 
 # Run regression
-w1 = logisticRegression(data, labels, eta=0.5, reg=0.001)
-w2 = privateLogReg(data, labels, eta=0.5, reg=0.001, eps=1, delta=0.1, c=100)
+w1 = logisticRegression(data, labels, eta=0.5, reg=0.001, t=n ** 2)
+w2 = privateLogReg(data, labels, eta=0.5, reg=0.001, t=n ** 2, eps=1, delta=0.1, c=100)
 print 1 / w1.item(0, 0) * w1
 print w_real
 

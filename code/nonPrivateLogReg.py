@@ -3,7 +3,7 @@ import math
 
 # Determines the weights that minimizes logistic loss
 # function when assigning data to labels
-def logisticRegression(data, labels, eta, reg):
+def logisticRegression(data, labels, eta, reg, t):
 	# Build initial weight matrix (0.5 in every entry)
 	assert len(data) != 0
 	n = data.shape[0]
@@ -14,7 +14,7 @@ def logisticRegression(data, labels, eta, reg):
 
 	# Gradient Descent
 	old_loss = 10000000
-	for _ in xrange(n ** 2):
+	for _ in xrange(t):
 		grad = np.zeros(w.shape)
 		loss = 0
 		
