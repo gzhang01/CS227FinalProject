@@ -2,6 +2,7 @@ import numpy as np
 from generate import generate
 import matplotlib.pyplot as plt
 from nonPrivateLogReg import logisticRegression
+from privateLogReg import privateLogReg
 
 # Extract data from train set
 # data = []
@@ -22,8 +23,9 @@ data, labels = generate(50, 2, w_real)
 # 	print data[i, :], labels[i, :]
 
 # Run regression
-w = logisticRegression(data, labels, 0.5, 0.001)
-print 1 / w.item(0, 0) * w
+w1 = logisticRegression(data, labels, eta=0.5, reg=0.001)
+w2 = privateLogReg(data, labels, eta=0.5, reg=0.001, eps=1, delta=0.1, c=100)
+print 1 / w1.item(0, 0) * w1
 print w_real
 
 
@@ -37,13 +39,15 @@ for i in xrange(data.shape[0]):
 		cat2.append((data.item(i, 0), data.item(i, 1)))
 xs = np.arange(0, 1.01, 0.05)
 liney = [(-w_real[0] * x - w_real[2]) / w_real[1] for x in xs]
-sgdy = [(-w.item(0, 0) * x - w.item(0, 2)) / w.item(0, 1) for x in xs]
+sgdy = [(-w1.item(0, 0) * x - w1.item(0, 2)) / w1.item(0, 1) for x in xs]
+nonPrivY = [(-w2.item(0, 0) * x - w2.item(0, 2)) / w2.item(0, 1) for x in xs]
 
 
 plt.plot([pt[0] for pt in cat1], [pt[1] for pt in cat1], "go")
 plt.plot([pt[0] for pt in cat2], [pt[1] for pt in cat2], "ro")
 plt.plot(xs, liney, "blue")
 plt.plot(xs, sgdy, "black")
+plt.plot(xs, nonPrivY, "m")
 plt.axis((0,1,0,1))
 plt.show()
 
