@@ -5,11 +5,11 @@ import math
 # function when assigning data to labels using objective 
 # perturbation
 # NOTE: only valid for 2 dimensions currently!
-def objectivePerturbation(data, labels, eta, reg, t, eps, delta):
+def objectivePerturbation(data, labels, eta, reg, t, eps, delta, w=None):
 	# Build initial weight matrix (0.5 in every entry)
 	assert len(data) != 0
 	n = data.shape[0]
-	w = np.matrix([0.5 for _ in xrange(data.shape[1] + 1)])
+	w = np.matrix([0.5 for _ in xrange(data.shape[1] + 1)]) if w == None else w
 	d = w.shape[1]
 	
 	# Add constant to data

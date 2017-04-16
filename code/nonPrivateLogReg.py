@@ -3,11 +3,11 @@ import math
 
 # Determines the weights that minimizes logistic loss
 # function when assigning data to labels
-def logisticRegression(data, labels, eta, reg, t):
+def logisticRegression(data, labels, eta, reg, t, w=None):
 	# Build initial weight matrix (0.5 in every entry)
 	assert len(data) != 0
 	n = data.shape[0]
-	w = np.matrix([0.5 for _ in xrange(data.shape[1] + 1)])
+	w = np.matrix([0.5 for _ in xrange(data.shape[1] + 1)]) if w == None else w
 	
 	# Add constant to data
 	data = np.hstack((data, np.ones((n, 1))))

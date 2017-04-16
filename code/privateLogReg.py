@@ -3,18 +3,17 @@ import math
 
 # Determines the weights that minimizes logistic loss
 # function when assigning data to labels with DP
-def privateLogReg(data, labels, eta, reg, t, eps, delta, c):
+def privateLogReg(data, labels, eta, reg, t, eps, delta, c, w=None):
 	# Build initial weight matrix (0.5 in every entry)
 	assert len(data) != 0
 	n = data.shape[0]
-	w = np.matrix([0.5 for _ in xrange(data.shape[1] + 1)])
+	w = np.matrix([0.5 for _ in xrange(data.shape[1] + 1)]) if w == None else w
 	
 	# Add constant to data
 	data = np.hstack((data, np.ones((n, 1))))
 
 	# Sigma parameter
 	sigma2 = math.log(1.0 * n / delta) * math.log(1.0 / delta) / (eps ** 2) / c
-	print sigma2
 
 	# Gradient Descent
 	for _ in xrange(t):
