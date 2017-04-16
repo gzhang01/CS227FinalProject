@@ -39,4 +39,4 @@ def logisticRegression(data, labels, eta, reg, t, w=None):
 		# Reset old loss
 		old_loss = loss
 
-	return w
+	return w, loss

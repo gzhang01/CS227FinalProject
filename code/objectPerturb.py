@@ -45,5 +45,5 @@ def objectivePerturbation(data, labels, eta, reg, t, eps, delta, w=None):
 		w = w - eta * grad
 		print w, loss
 
-	return w
+	return w, loss
 

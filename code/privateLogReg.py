@@ -40,7 +40,7 @@ def privateLogReg(data, labels, eta, reg, t, eps, delta, c, w=None):
 		w = w - eta * grad
 		print w, loss
 
-	return w
+	return w, loss
 
 
 
