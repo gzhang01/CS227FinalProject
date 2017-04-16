@@ -1,6 +1,5 @@
 import numpy as np
 import math
-import random
 
 # Determines the weights that minimizes logistic loss
 # function when assigning data to labels with DP
@@ -29,7 +28,7 @@ def privateLogReg(data, labels, eta, reg, t, eps, delta, c):
 		loss = 1.0 * loss / n + 2 * reg * (w.T * w).item(0, 0)
 
 		# Calculate gradient
-		index = random.randint(0, n - 1)
+		index = np.random.randint(0, n)
 		exp = math.e ** (-1.0 * labels.item(index, 0) * w.dot(data[index, :].T).item(0, 0))
 		grad += exp / (1 + exp) * (-1.0 * labels[index] * data[index, :])
 		noise = [0 for _ in xrange(grad.shape[1])]
