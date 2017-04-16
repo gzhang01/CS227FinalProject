@@ -8,7 +8,7 @@ The goal of this project is to implement and analyze the utility of differential
 ### Main Goals
 * Implement data generation script (Done)
 * Implement non-private SGD (Done)
-* Implement private SGD
+* Implement private SGD (Done)
 * Data collection / utility analysis
 * Presentation prepared
 * Writeup complete
