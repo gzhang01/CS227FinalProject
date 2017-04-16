@@ -1,0 +1,49 @@
+import numpy as np
+import math
+
+# Determines the weights that minimizes logistic loss
+# function when assigning data to labels using objective 
+# perturbation
+# NOTE: only valid for 2 dimensions currently!
+def objectivePerturbation(data, labels, eta, reg, t, eps, delta):
+	# Build initial weight matrix (0.5 in every entry)
+	assert len(data) != 0
+	n = data.shape[0]
+	w = np.matrix([0.5 for _ in xrange(data.shape[1] + 1)])
+	d = w.shape[1]
+	
+	# Add constant to data
+	data = np.hstack((data, np.ones((n, 1))))
+
+	# Gradient Descent
+	for _ in xrange(t):
+		grad = np.zeros(w.shape)
+		loss = 0
+		
+		# Sum
+		for i in xrange(n):
+			exp = math.e ** (-1.0 * labels.item(i, 0) * w.dot(data[i, :].T).item(0, 0))
+			grad += exp / (1 + exp) * (-1.0 * labels[i] * data[i, :])
+			loss += math.log(1 + exp)
+
+		# Calculate noise vector b
+		bDir = [np.random.uniform(0, 2 * math.pi) for _ in xrange(d - 1)]
+		bNorm = np.random.gamma(data.shape[1], 2.0 / eps)
+		b = []
+		for i in xrange(len(bDir)):
+			b.append(bNorm * math.sin(bDir[i]))
+			bNorm *= math.cos(bDir[i])
+			if i == len(bDir) - 1:
+				b.append(bNorm)
+		b = np.matrix(b)
+
+		# Calculate gradient and loss
+		grad = 1.0 * grad / n + 2 * reg * w + b / n
+		loss = 1.0 * loss / n + 2 * reg * (w.T * w).item(0, 0)
+		
+		# Update weight
+		w = w - eta * grad
+		print w, loss
+
+	return w
+
