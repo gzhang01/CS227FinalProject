@@ -18,7 +18,7 @@ from objectPerturb import objectivePerturbation
 
 
 # Generate data
-n = 50
+n = 75
 w_real = [1, -1, 0]
 data, labels = generate(n, 2, w_real)
 # for i in xrange(data.shape[0]):
@@ -30,7 +30,7 @@ w2 = np.matrix([0, 1, -0.5])
 w3 = np.matrix([0, 1, -0.5])
 
 # Granularity
-t = 50
+t = 25
 
 # Loss values
 xLoss = []
@@ -66,9 +66,9 @@ for i in xrange(n ** 2 / t):
 
 
 	# Run regression
-	w1, loss1 = logisticRegression(data, labels, eta=0.5, reg=0.001, t=t, w=w1)
-	w2, loss2 = privateLogReg(data, labels, eta=0.5, reg=0.001, t=t, eps=1, delta=0.1, c=400, w=w2)
-	w3, loss3 = objectivePerturbation(data, labels, eta=0.5, reg=0.001, t=t, eps=1, delta=0.1, w=w3)
+	w1, loss1 = logisticRegression(data, labels, eta=0.5, reg=0.0005, t=t, w=w1)
+	w2, loss2 = privateLogReg(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, c=400, w=w2)
+	w3, loss3 = objectivePerturbation(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, w=w3)
 	print 1 / w1.item(0, 0) * w1
 	print 1 / w2.item(0, 0) * w2
 	print 1 / w3.item(0, 0) * w3
