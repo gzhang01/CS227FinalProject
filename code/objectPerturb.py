@@ -21,6 +21,7 @@ def objectivePerturbation(data, labels, eta, reg, t, eps, delta, w=None):
 		loss = 0
 		
 		# Sum
+		# Will find gradient over all points, since we're finding total loss anyway
 		for i in xrange(n):
 			exp = math.e ** (-1.0 * labels.item(i, 0) * w.dot(data[i, :].T).item(0, 0))
 			grad += exp / (1 + exp) * (-1.0 * labels[i] * data[i, :])
@@ -39,7 +40,7 @@ def objectivePerturbation(data, labels, eta, reg, t, eps, delta, w=None):
 
 		# Calculate gradient and loss
 		grad = 1.0 * grad / n + 2 * reg * w + b / n
-		loss = 1.0 * loss / n + 2 * reg * (w.T * w).item(0, 0)
+		loss = 1.0 * loss / n
 		
 		# Update weight
 		w = w - eta * grad

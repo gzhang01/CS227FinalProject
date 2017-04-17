@@ -13,7 +13,7 @@ def privateLogReg(data, labels, eta, reg, t, eps, delta, c, w=None):
 	data = np.hstack((data, np.ones((n, 1))))
 
 	# Sigma parameter
-	sigma2 = math.log(1.0 * n / delta) * math.log(1.0 / delta) / (eps ** 2) / c
+	sigma2 = c * math.log(1.0 * n / delta) * math.log(1.0 / delta) / (eps ** 2)
 
 	# Gradient Descent
 	for _ in xrange(t):
@@ -24,7 +24,7 @@ def privateLogReg(data, labels, eta, reg, t, eps, delta, c, w=None):
 		for i in xrange(n):
 			exp = math.e ** (-1.0 * labels.item(i, 0) * w.dot(data[i, :].T).item(0, 0))
 			loss += math.log(1 + exp)
-		loss = 1.0 * loss / n + 2 * reg * (w.T * w).item(0, 0)
+		loss = 1.0 * loss / n
 
 		# Calculate gradient
 		index = np.random.randint(0, n)
