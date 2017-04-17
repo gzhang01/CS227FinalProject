@@ -30,7 +30,7 @@ def logisticRegression(data, labels, eta, reg, t, w=None):
 		
 		# Update weight
 		w = w - eta * grad
-		print w, loss
+		# print w, loss
 
 		# Test for convergence
 		if abs(old_loss - loss) < 0.00001:

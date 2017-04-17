@@ -38,7 +38,7 @@ def privateLogReg(data, labels, eta, reg, t, eps, delta, c, w=None):
 		
 		# Update weight
 		w = w - eta * grad
-		print w, loss
+		# print w, loss
 
 	return w, loss
 
