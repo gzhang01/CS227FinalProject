@@ -23,8 +23,7 @@ This file runs logistic regression using non-private SGD, private SGD, and objec
  * `w` - weight vector (passed into `generate.py`)
    * NOTE: since `plot.py` only plots in two dimensions, |w| must equal 3
  * Options:
-   * `-s [filename]`: flag to save the animation under `data/[filename]`
-     * NOTE: loss graph automatically saved under `data/loss.png`
+   * `-s`: flag to save the animation and loss graph under `data/[w][n]Vid.mp4` and `data/[w][n]Loss.png`
 
 ## To Do
 ### Main Goals

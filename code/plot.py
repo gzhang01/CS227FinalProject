@@ -39,6 +39,8 @@ def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="
 
 	# Plotting animation
 	def animate(i):
+		if i % 10 == 0:
+			print i
 		# Compiling data to plot
 		line2.set_ydata([(-w1[i].item(0, 0) * x - w1[i].item(0, 2)) / w1[i].item(0, 1) for x in xs])
 		line3.set_ydata([(-w2[i].item(0, 0) * x - w2[i].item(0, 2)) / w2[i].item(0, 1) for x in xs])
@@ -48,7 +50,7 @@ def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="
 	ani = animation.FuncAnimation(f, animate, np.arange(1, len(w1)), interval=30, blit=False)
 
 	if save:
-		ani.save("data/{0}".format(outfile))
+		ani.save("{0}".format(outfile))
 
 	if show:
 		plt.show()
@@ -78,12 +80,13 @@ def main(n, w_real, options):
 	w3 = np.matrix([0, 1, -0.5])
 
 	# Weights
-	sgdWeights = [w1]
-	nonPrivWeights = [w2]
-	objPretWeights = [w3]
+	sgdWeights = [w1 for _ in xrange(20)]
+	nonPrivWeights = [w2 for _ in xrange(20)]
+	objPretWeights = [w3 for _ in xrange(20)]
 
 	# Granularity
-	t = 5
+	t = 2
+	lossT = 3
 
 	# Loss values
 	xLoss = []
@@ -109,10 +112,12 @@ def main(n, w_real, options):
 		w3, loss3 = objectivePerturbation(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, w=w3)
 
 		# Add loss value
-		xLoss.append((i + 1) * t)
-		sgdLoss.append(loss1)
-		nonPrivLoss.append(loss2)
-		objPretLoss.append(loss3)
+		if i % lossT == 0:
+			print i
+			xLoss.append((i + 1) * t)
+			sgdLoss.append(loss1)
+			nonPrivLoss.append(loss2)
+			objPretLoss.append(loss3)
 
 		# Add weights
 		sgdWeights.append(w1)
@@ -121,7 +126,7 @@ def main(n, w_real, options):
 
 	# Plot animation
 	save = True if "-s" in options else False
-	outfile = [options[i] for i in xrange(1, len(options)) if options[i - 1] == "-s"][0] if save else "tmp.mp4"
+	outfile = "data/[{0}]{1}Vid.mp4".format(",".join([str(x) for x in w_real]), n) if save else "tmp.mp4"
 	plotGraph(cat1, cat2, xs, liney, sgdWeights, nonPrivWeights, objPretWeights, show=True, save=save, outfile=outfile)
 
 	# Plot loss functions
@@ -131,7 +136,7 @@ def main(n, w_real, options):
 	plt.suptitle('Loss Over Iterations', size=16)
 	plt.xlabel('Iteration')
 	plt.ylabel('Loss')
-	plt.savefig("data/loss.png")
+	plt.savefig("{0}Loss.png".format(outfile.replace("Vid.mp4", "")))
 	plt.show()
 
 if __name__ == "__main__":
@@ -141,7 +146,7 @@ if __name__ == "__main__":
 
 	# Parse command line input
 	n = int(sys.argv[1])
-	w_real = map(int, sys.argv[2].replace("[", "").replace("]", "").split(","))
+	w_real = map(float, sys.argv[2].replace("[", "").replace("]", "").split(","))
 	options = sys.argv[3:]
 	main(n, w_real, options)
 
