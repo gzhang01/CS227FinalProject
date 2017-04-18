@@ -9,13 +9,13 @@ The goal of this project is to implement and analyze the utility of differential
 * Implement data generation script (Done)
 * Implement non-private SGD (Done)
 * Implement private SGD (Done)
-* Data collection / utility analysis
+* Data collection (Done)
 * Presentation prepared
 * Writeup complete
 
 ### Secondary Goals
 * Visualization of algorithms 
   * Plot final points / lines (Done)
-  * Animate visualization
+  * Animate visualization (Done)
 * Analysis with regards to theoretical utility
 * Multinomial logistic regression?
