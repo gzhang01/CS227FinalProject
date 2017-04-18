@@ -5,15 +5,17 @@ from nonPrivateLogReg import logisticRegression
 from privateLogReg import privateLogReg
 from objectPerturb import objectivePerturbation
 import matplotlib.animation as animation
+import sys
 
 # Plot graphs
-def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="tmp.png"):
+def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="tmp.mp4"):
 	# If neither showing nor saving, don't need to do any work
 	if not show and not save:
 		return
 
 	# Plot setup
 	f, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
+	plt.suptitle("Logistic Regression Results", size=16)
 	ax1.set_title('Generator')
 	ax2.set_title('Non-Private SGD')
 	ax3.set_title('Private SGD')
@@ -46,7 +48,7 @@ def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="
 	ani = animation.FuncAnimation(f, animate, np.arange(1, len(w1)), interval=30, blit=False)
 
 	if save:
-		plt.savefig("data/{0}".format(outfile))
+		ani.save("data/{0}".format(outfile))
 
 	if show:
 		plt.show()
@@ -66,69 +68,82 @@ def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="
 # labels = np.matrix(labels)
 
 
-# Generate data
-n = 50
-w_real = [1, -1, 0]
-data, labels = generate(n, 2, w_real)
-# for i in xrange(data.shape[0]):
-# 	print data[i, :], labels[i, :]
+def main(n, w_real, options):
+	# Generate data
+	data, labels = generate(n, 2, w_real)
 
-# Starting weights
-w1 = np.matrix([0, 1, -0.5])
-w2 = np.matrix([0, 1, -0.5])
-w3 = np.matrix([0, 1, -0.5])
+	# Starting weights
+	w1 = np.matrix([0, 1, -0.5])
+	w2 = np.matrix([0, 1, -0.5])
+	w3 = np.matrix([0, 1, -0.5])
 
-# Weights
-sgdWeights = [w1]
-nonPrivWeights = [w2]
-objPretWeights = [w3]
+	# Weights
+	sgdWeights = [w1]
+	nonPrivWeights = [w2]
+	objPretWeights = [w3]
 
-# Granularity
-t = 5
+	# Granularity
+	t = 5
 
-# Loss values
-xLoss = []
-sgdLoss = []
-nonPrivLoss = []
-objPretLoss = []
+	# Loss values
+	xLoss = []
+	sgdLoss = []
+	nonPrivLoss = []
+	objPretLoss = []
 
-# Compiling data to plot
-cat1 = []
-cat2 = []
-for j in xrange(data.shape[0]):
-	if labels.item(j, 0) == 1:
-		cat1.append((data.item(j, 0), data.item(j, 1)))
-	else:
-		cat2.append((data.item(j, 0), data.item(j, 1)))
-xs = np.arange(0, 1.01, 0.05)
-liney = [(-w_real[0] * x - w_real[2]) / w_real[1] for x in xs]
+	# Compiling data to plot
+	cat1 = []
+	cat2 = []
+	for j in xrange(data.shape[0]):
+		if labels.item(j, 0) == 1:
+			cat1.append((data.item(j, 0), data.item(j, 1)))
+		else:
+			cat2.append((data.item(j, 0), data.item(j, 1)))
+	xs = np.arange(0, 1.01, 0.05)
+	liney = [(-w_real[0] * x - w_real[2]) / w_real[1] for x in xs]
 
-for i in xrange(n ** 2 / t):
-	# Run regression
-	w1, loss1 = logisticRegression(data, labels, eta=0.5, reg=0.0005, t=t, w=w1)
-	w2, loss2 = privateLogReg(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, c=1.0/400, w=w2)
-	w3, loss3 = objectivePerturbation(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, w=w3)
-	# print 1 / w1.item(0, 0) * w1, loss1
-	# print 1 / w2.item(0, 0) * w2, loss2
-	# print 1 / w3.item(0, 0) * w3, loss3
-	# print w_real
+	for i in xrange(n ** 2 / t):
+		# Run regression
+		w1, loss1 = logisticRegression(data, labels, eta=0.5, reg=0.0005, t=t, w=w1)
+		w2, loss2 = privateLogReg(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, c=1.0/400, w=w2)
+		w3, loss3 = objectivePerturbation(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, w=w3)
 
-	# Add loss value
-	xLoss.append((i + 1) * t)
-	sgdLoss.append(loss1)
-	nonPrivLoss.append(loss2)
-	objPretLoss.append(loss3)
+		# Add loss value
+		xLoss.append((i + 1) * t)
+		sgdLoss.append(loss1)
+		nonPrivLoss.append(loss2)
+		objPretLoss.append(loss3)
 
-	# Add weights
-	sgdWeights.append(w1)
-	nonPrivWeights.append(w2)
-	objPretWeights.append(w3)
+		# Add weights
+		sgdWeights.append(w1)
+		nonPrivWeights.append(w2)
+		objPretWeights.append(w3)
 
-# Plot last graph
-plotGraph(cat1, cat2, xs, liney, sgdWeights, nonPrivWeights, objPretWeights, show=True, save=False)
+	# Plot animation
+	save = True if "-s" in options else False
+	outfile = [options[i] for i in xrange(1, len(options)) if options[i - 1] == "-s"][0] if save else "tmp.mp4"
+	plotGraph(cat1, cat2, xs, liney, sgdWeights, nonPrivWeights, objPretWeights, show=True, save=save, outfile=outfile)
 
-plt.plot(xLoss, sgdLoss, "black")
-plt.plot(xLoss, nonPrivLoss, "m")
-plt.plot(xLoss, objPretLoss, "c")
-plt.show()
+	# Plot loss functions
+	plt.plot(xLoss, sgdLoss, "black")
+	plt.plot(xLoss, nonPrivLoss, "m")
+	plt.plot(xLoss, objPretLoss, "c")
+	plt.suptitle('Loss Over Iterations', size=16)
+	plt.xlabel('Iteration')
+	plt.ylabel('Loss')
+	plt.savefig("data/loss.png")
+	plt.show()
+
+if __name__ == "__main__":
+	if len(sys.argv) < 3:
+		print "Usage: python plot.py [n] [w] [options]"
+		exit(1)
+
+	# Parse command line input
+	n = int(sys.argv[1])
+	w_real = map(int, sys.argv[2].replace("[", "").replace("]", "").split(","))
+	options = sys.argv[3:]
+	main(n, w_real, options)
+
+
 
