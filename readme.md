@@ -38,5 +38,6 @@ This file runs logistic regression using non-private SGD, private SGD, and objec
 * Visualization of algorithms (Done)
   * Plot final points / lines (Done)
   * Animate visualization (Done)
+* Analysis of imperfect boundary
 * Analysis with regards to theoretical utility
 * Multinomial logistic regression?
