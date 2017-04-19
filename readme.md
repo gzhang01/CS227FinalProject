@@ -31,7 +31,7 @@ This file runs logistic regression using non-private SGD, private SGD, and objec
 * Implement non-private SGD (Done)
 * Implement private SGD (Done)
 * Data collection (Done)
-* Presentation prepared
+* Presentation prepared (Done)
 * Writeup complete
 
 ### Secondary Goals
