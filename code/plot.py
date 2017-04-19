@@ -80,9 +80,9 @@ def main(n, w_real, options):
 	w3 = np.matrix([0, 1, -0.5])
 
 	# Weights
-	sgdWeights = [w1 for _ in xrange(20)]
-	nonPrivWeights = [w2 for _ in xrange(20)]
-	objPretWeights = [w3 for _ in xrange(20)]
+	sgdWeights = [w1 for _ in xrange(10)]
+	nonPrivWeights = [w2 for _ in xrange(10)]
+	objPretWeights = [w3 for _ in xrange(10)]
 
 	# Granularity
 	t = 2
@@ -107,9 +107,9 @@ def main(n, w_real, options):
 
 	for i in xrange(n ** 2 / t):
 		# Run regression
-		w1, loss1 = logisticRegression(data, labels, eta=0.5, reg=0.0005, t=t, w=w1)
-		w2, loss2 = privateLogReg(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, c=1.0/400, w=w2)
-		w3, loss3 = objectivePerturbation(data, labels, eta=0.5, reg=0.0005, t=t, eps=1, delta=0.1, w=w3)
+		w1, loss1 = logisticRegression(data, labels, eta=0.2, reg=0.0005, t=t, w=w1)
+		w2, loss2 = privateLogReg(data, labels, eta=0.2, reg=0.0005, t=t, eps=1, delta=0.1, c=1.0/400, w=w2)
+		w3, loss3 = objectivePerturbation(data, labels, eta=0.2, reg=0.0005, t=t, eps=1, delta=0.1, w=w3)
 
 		# Add loss value
 		if i % lossT == 0:
