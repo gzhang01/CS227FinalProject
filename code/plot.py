@@ -8,7 +8,7 @@ import matplotlib.animation as animation
 import sys
 
 # Plot graphs
-def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="tmp.mp4"):
+def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="tmp.mp4", interval=30):
 	# If neither showing nor saving, don't need to do any work
 	if not show and not save:
 		return
@@ -47,7 +47,7 @@ def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="
 		line4.set_ydata([(-w3[i].item(0, 0) * x - w3[i].item(0, 2)) / w3[i].item(0, 1) for x in xs])
 		return line2, line3, line4,
 	
-	ani = animation.FuncAnimation(f, animate, np.arange(1, len(w1)), interval=30, blit=False)
+	ani = animation.FuncAnimation(f, animate, np.arange(1, len(w1)), interval=interval, blit=False)
 
 	if save:
 		ani.save("{0}".format(outfile))
@@ -80,9 +80,9 @@ def main(n, w_real, options):
 	w3 = np.matrix([0, 1, -0.5])
 
 	# Weights
-	sgdWeights = [w1 for _ in xrange(10)]
-	nonPrivWeights = [w2 for _ in xrange(10)]
-	objPretWeights = [w3 for _ in xrange(10)]
+	sgdWeights = [w1 for _ in xrange(20)]
+	nonPrivWeights = [w2 for _ in xrange(20)]
+	objPretWeights = [w3 for _ in xrange(20)]
 
 	# Granularity
 	t = 2
@@ -126,8 +126,11 @@ def main(n, w_real, options):
 
 	# Plot animation
 	save = True if "-s" in options else False
-	outfile = "data/[{0}]{1}Vid.mp4".format(",".join([str(x) for x in w_real]), n) if save else "tmp.mp4"
-	plotGraph(cat1, cat2, xs, liney, sgdWeights, nonPrivWeights, objPretWeights, show=True, save=save, outfile=outfile)
+	outfile = "../data/[{0}]{1}Vid.mp4".format(",".join([str(x) for x in w_real]), n) if save else "../data/tmp.mp4"
+	time = 15
+	interval = 30
+	cutoff = time * 1000 / interval
+	plotGraph(cat1, cat2, xs, liney, sgdWeights[:cutoff], nonPrivWeights[:cutoff], objPretWeights[:cutoff], show=True, save=save, outfile=outfile)
 
 	# Plot loss functions
 	plt.plot(xLoss, sgdLoss, "black")
@@ -136,7 +139,8 @@ def main(n, w_real, options):
 	plt.suptitle('Loss Over Iterations', size=16)
 	plt.xlabel('Iteration')
 	plt.ylabel('Loss')
-	plt.savefig("{0}Loss.png".format(outfile.replace("Vid.mp4", "")))
+	if save:
+		plt.savefig("{0}Loss.png".format(outfile.replace("Vid.mp4", "")))
 	plt.show()
 
 if __name__ == "__main__":
