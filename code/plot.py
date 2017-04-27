@@ -89,6 +89,7 @@ def main(n, w_real, options):
 	# Granularity
 	t = 5
 	lossT = 5
+	c = 1.0/400
 
 	# Loss values
 	xLoss = []
@@ -110,7 +111,7 @@ def main(n, w_real, options):
 	for i in xrange(n ** 2 / t):
 		# Run regression
 		w1, loss1 = logisticRegression(data, labels, eta=0.2, reg=0.0005, t=t, w=w1, mb=20)
-		w2, loss2 = privateLogReg(data, labels, eta=0.2, reg=0.0005, t=t, eps=1, delta=0.1, c=1.0/10, w=w2, mb=20)
+		w2, loss2 = privateLogReg(data, labels, eta=0.2, reg=0.0005, t=t, eps=1, delta=0.1, c=c, w=w2, mb=20)
 		w3, loss3 = objectivePerturbation(data, labels, eta=0.2, reg=0.0005, t=t, eps=1, delta=0.1, w=w3, mb=20)
 
 		# Add loss value
@@ -128,7 +129,7 @@ def main(n, w_real, options):
 
 	# Plot animation
 	save = True if "-s" in options else False
-	outfile = "../data/[{0}]{1}Vid.mp4".format(",".join([str(x) for x in w_real]), n) if save else "../data/tmp.mp4"
+	outfile = "../data/[{0}]{1}c{2}Vid.mp4".format(",".join([str(x) for x in w_real]), n, c) if save else "../data/tmp.mp4"
 	time = 15
 	interval = 30
 	cutoff = time * 1000 / interval
