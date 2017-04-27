@@ -1,3 +1,3 @@
 Nonprivate: 	4834 Correct 	5000 Total 	0.9668%
-Private: 		4261 Correct 	5000 Total 	0.8522%
+Private: 		4261 Correct 	5000 Total 	0.8522%			(c = 1/10)
 Objective: 	4814 Correct 	5000 Total 	0.9628%
