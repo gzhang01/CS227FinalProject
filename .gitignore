@@ -1,3 +1,9 @@
 *.pyc
 *Test.py
 *.DS_Store
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.tex
+*.docx
