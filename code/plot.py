@@ -47,10 +47,12 @@ def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="
 		line4.set_ydata([(-w3[i].item(0, 0) * x - w3[i].item(0, 2)) / w3[i].item(0, 1) for x in xs])
 		return line2, line3, line4,
 	
-	ani = animation.FuncAnimation(f, animate, np.arange(1, len(w1)), interval=interval, blit=False)
-
-	if save:
-		ani.save("{0}".format(outfile))
+	if len(w1) > 1:
+		ani = animation.FuncAnimation(f, animate, np.arange(1, len(w1)), interval=interval, blit=False)
+		if save:
+			ani.save("{0}".format(outfile))
+	elif save:
+		plt.savefig("{0}".format(outfile))
 
 	if show:
 		plt.show()
@@ -108,7 +110,7 @@ def main(n, w_real, options):
 	for i in xrange(n ** 2 / t):
 		# Run regression
 		w1, loss1 = logisticRegression(data, labels, eta=0.2, reg=0.0005, t=t, w=w1, mb=20)
-		w2, loss2 = privateLogReg(data, labels, eta=0.2, reg=0.0005, t=t, eps=1, delta=0.1, c=1.0/400, w=w2, mb=20)
+		w2, loss2 = privateLogReg(data, labels, eta=0.2, reg=0.0005, t=t, eps=1, delta=0.1, c=1.0/10, w=w2, mb=20)
 		w3, loss3 = objectivePerturbation(data, labels, eta=0.2, reg=0.0005, t=t, eps=1, delta=0.1, w=w3, mb=20)
 
 		# Add loss value
@@ -142,6 +144,32 @@ def main(n, w_real, options):
 	if save:
 		plt.savefig("{0}Loss.png".format(outfile.replace("Vid.mp4", "")))
 	plt.show()
+
+	# Plot final result
+	plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=save, outfile=outfile.replace("Vid.mp4", "final.png"))
+
+	# Testing Set
+	testN = 5000
+	testData, testLabels = generate(testN, 2, w_real)
+	testData = np.hstack((testData, np.ones((testN, 1))))
+
+	# [Nonprivate, private, objective]
+	finalWeights = [w1, w2, w3]
+	numCorrect = [0, 0, 0]
+	for i in xrange(len(testData)):
+		for j in xrange(len(finalWeights)):
+			if testLabels.item(i, 0) * finalWeights[j].dot(testData[i, :].T).item(0, 0) >= 0:
+				numCorrect[j] += 1
+
+	if save:
+		testOutfile = outfile.replace("Vid.mp4", "Test.txt")
+		with open(testOutfile, "w") as f:
+			f.write("Nonprivate: 	{0} Correct 	{1} Total 	{2}%\n".format(numCorrect[0], testN, 1.0 * numCorrect[0] / testN))
+			f.write("Private: 		{0} Correct 	{1} Total 	{2}%\n".format(numCorrect[1], testN, 1.0 * numCorrect[1] / testN))
+			f.write("Objective: 	{0} Correct 	{1} Total 	{2}%\n".format(numCorrect[2], testN, 1.0 * numCorrect[2] / testN))
+	print "Nonprivate: 	{0} Correct 	{1} Total 	{2}%".format(numCorrect[0], testN, 1.0 * numCorrect[0] / testN)
+	print "Private: 	{0} Correct 	{1} Total 	{2}%".format(numCorrect[1], testN, 1.0 * numCorrect[1] / testN)
+	print "Objective: 	{0} Correct 	{1} Total 	{2}%".format(numCorrect[2], testN, 1.0 * numCorrect[2] / testN)
 
 if __name__ == "__main__":
 	if len(sys.argv) < 3:
