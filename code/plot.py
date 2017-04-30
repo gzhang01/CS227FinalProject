@@ -73,8 +73,11 @@ def plotGraph(cat1, cat2, xs, liney, w1, w2, w3, show=True, save=True, outfile="
 
 
 def main(n, w_real, options):
+	# Check for noisy threshold
+	noisy = True if "-n" in options else False
+
 	# Generate data
-	data, labels = generate(n, 2, w_real)
+	data, labels = generate(n, 2, w_real, noisy)
 
 	# Starting weights
 	w1 = np.matrix([0, 1, -0.5])
@@ -129,7 +132,8 @@ def main(n, w_real, options):
 
 	# Plot animation
 	save = True if "-s" in options else False
-	outfile = "../data/[{0}]{1}c{2}Vid.mp4".format(",".join([str(x) for x in w_real]), n, c) if save else "../data/tmp.mp4"
+	noiseString = "N" if noisy else ""
+	outfile = "../data/[{0}]{1}c{2}{3}Vid.mp4".format(",".join([str(x) for x in w_real]), n, c, noiseString) if save else "../data/tmp.mp4"
 	time = 15
 	interval = 30
 	cutoff = time * 1000 / interval
@@ -151,7 +155,7 @@ def main(n, w_real, options):
 
 	# Testing Set
 	testN = 5000
-	testData, testLabels = generate(testN, 2, w_real)
+	testData, testLabels = generate(testN, 2, w_real, noisy)
 	testData = np.hstack((testData, np.ones((testN, 1))))
 
 	# [Nonprivate, private, objective]

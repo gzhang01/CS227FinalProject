@@ -24,6 +24,7 @@ This file runs logistic regression using non-private SGD, private SGD, and objec
    * NOTE: since `plot.py` only plots in two dimensions, |w| must equal 3
  * Options:
    * `-s`: flag to save the animation and loss graph under `data/[w][n]Vid.mp4` and `data/[w][n]Loss.png`
+   * `-n`: generates noisy data
 
 ## To Do
 ### Main Goals

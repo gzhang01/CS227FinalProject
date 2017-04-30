@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import sys
+import math
 
 # Generates datapoints for train and test set
 # Parameters:
@@ -13,7 +14,7 @@ import sys
 #	data - n by d numpy matrix of datapoints
 #	category - n by 1 numpy matrix of categories (-1 or 1)
 #		* NOTE: category = 1 if above hyperplace; -1 if below
-def generate(n, d, w):
+def generate(n, d, w, noisy=False):
 	# Variables to hold generated data
 	data = []
 	category = []
@@ -31,7 +32,11 @@ def generate(n, d, w):
 		# Assign category
 		tmp = list(datum)
 		tmp.append(1)
-		cat = 1 if np.array(tmp).dot(weights) > 0 else -1
+		if not noisy:
+			cat = 1 if np.array(tmp).dot(weights) > 0 else -1
+		else:
+			#print np.array(tmp).dot(weights)
+			cat = 1 if random.random() > 1.0 / (1 + math.e ** (-5 * np.array(tmp).dot(weights))) else -1
 
 		# Add to dataset
 		data.append(datum)
