@@ -91,7 +91,7 @@ def main(n, w_real, options):
 
 	# Granularity
 	t = 5
-	lossT = 5
+	lossT = n * n / t / 100
 	c = 1.0/400
 
 	# Loss values
