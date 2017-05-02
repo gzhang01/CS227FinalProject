@@ -33,12 +33,12 @@ This file runs logistic regression using non-private SGD, private SGD, and objec
 * Implement private SGD (Done)
 * Data collection (Done)
 * Presentation prepared (Done)
-* Writeup complete
+* Writeup complete (Done)
 
 ### Secondary Goals
 * Visualization of algorithms (Done)
   * Plot final points / lines (Done)
   * Animate visualization (Done)
-* Analysis of imperfect boundary
+* Analysis of imperfect boundary (Done)
 * Analysis with regards to theoretical utility
 * Multinomial logistic regression?
